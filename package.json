@@ -1,7 +1,7 @@
 {
-  "name": "pdf-download-automation",
+  "name": "pdf-harvester",
   "version": "1.0.0",
-  "description": "Smart automated PDF scraper and batch downloader",
+  "description": "Smart automated webpage PDF scanner and batch downloader with Web UI and CLI",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
