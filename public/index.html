@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Harvester — Smart Automated PDF Batch Downloader</title>
+  <meta name="description" content="Effortlessly scan any webpage, detect all PDF links, and batch download them instantly or save as a ZIP archive.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h1>PDF Harvester</h1>
+          <p class="tagline">Automated Webpage PDF Scanner & Batch Downloader</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="openFolderBtn" class="btn btn-secondary" title="Open destination folder in File Explorer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Open Folder
+        </button>
+      </div>
+    </header>
+
+    <!-- Scanner Control Card -->
+    <section class="card control-card">
+      <form id="scanForm" class="scan-form">
+        <div class="input-wrapper">
+          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <input 
+            type="url" 
+            id="urlInput" 
+            placeholder="Paste any webpage URL here (e.g., https://example.com/reports)..." 
+            required 
+            autocomplete="off"
+          />
+        </div>
+        <button type="submit" id="scanBtn" class="btn btn-primary">
+          <span class="btn-text">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Scan Webpage
+          </span>
+          <span class="loader hidden"></span>
+        </button>
+      </form>
+
+      <!-- Status banner -->
+      <div id="statusBanner" class="status-banner hidden"></div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="resultsSection" class="results-section hidden">
+      <!-- Toolbar -->
+      <div class="results-toolbar">
+        <div class="stats-group">
+          <div class="stat-badge">
+            <span class="stat-label">Found:</span>
+            <span id="totalFoundCount" class="stat-value">0</span>
+          </div>
+          <div class="stat-badge highlight">
+            <span class="stat-label">Selected:</span>
+            <span id="selectedCount" class="stat-value">0</span>
+          </div>
+        </div>
+
+        <div class="filter-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <input type="text" id="filterInput" placeholder="Filter by name or URL..." />
+        </div>
+
+        <div class="action-buttons">
+          <button id="toggleSelectAllBtn" class="btn btn-outline btn-sm">Select All</button>
+          <button id="downloadBatchBtn" class="btn btn-primary btn-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download to Local Folder
+          </button>
+          <button id="downloadZipBtn" class="btn btn-accent btn-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="21 8 21 21 3 21 3 8"></polyline>
+              <rect x="1" y="3" width="22" height="5"></rect>
+              <line x1="10" y1="12" x2="14" y2="12"></line>
+            </svg>
+            Download ZIP
+          </button>
+        </div>
+      </div>
+
+      <!-- Batch Progress Bar -->
+      <div id="progressWrapper" class="progress-wrapper hidden">
+        <div class="progress-info">
+          <span id="progressText">Downloading items...</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- PDF Items Table / List -->
+      <div class="card pdf-list-card">
+        <div class="table-header">
+          <label class="checkbox-container">
+            <input type="checkbox" id="headerCheckbox" checked>
+            <span class="checkmark"></span>
+          </label>
+          <span class="col-title">Document Name & Link</span>
+          <span class="col-action">Action</span>
+        </div>
+        <div id="pdfListContainer" class="pdf-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Empty State / Tips -->
+    <section id="tipsSection" class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">⚡</div>
+        <h3>High-Speed Batch Mode</h3>
+        <p>Parallel connections fetch dozens of PDFs simultaneously, saving you hundreds of clicks.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📁</div>
+        <h3>Automatic Deduplication</h3>
+        <p>Safely handles duplicate names and cleans Windows-illegal characters seamlessly.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🐍</div>
+        <h3>Python Script Included</h3>
+        <p>Need headless scheduled jobs? Run <code>python pdf_downloader.py &lt;URL&gt;</code> in your terminal anytime.</p>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <p>PDF Download Automation Suite &bull; Ready for large-scale web scraping</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
